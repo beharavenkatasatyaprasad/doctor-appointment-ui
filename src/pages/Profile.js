@@ -11,6 +11,7 @@ import Switch from 'react-switch';
 import { checkedIcon, uncheckedIcon } from '../utils/icons';
 import { updateUser } from '../redux/actions/user';
 import { Link } from 'react-router-dom';
+import ReactQuill from 'react-quill';
 
 const Profile = () => {
   const { user } = useSelector((s) => s.userDetails);
@@ -32,12 +33,12 @@ const Profile = () => {
       }
     });
   };
-  //
 
   const handleUpdateSave = () => {
     editUser(state).then((res) => {
       if (res.success) {
         dispatch(updateUser({ user: res.user }));
+        alert('changes Saved successfully!');
       }
     });
   };
@@ -50,8 +51,9 @@ const Profile = () => {
       .then((response) => {
         if (response.success) {
           dispatch(updateUser({ user: response.user }));
+          alert('changes Saved successfully!');
           return;
-        }else{
+        } else {
           return;
         }
       })
@@ -219,16 +221,7 @@ const Profile = () => {
                   </div>
                   <div className='form-group'>
                     <div className='form-label-group'>
-                      <textarea
-                        type='text'
-                        className={'form-control ' + (state.authError ? 'is-invalid' : '')}
-                        id='about'
-                        value={state.about}
-                        placeholder='About'
-                        name='about'
-                        onChange={(e) => setState('about')(e.target.value)}
-                        required
-                      />
+                      <ReactQuill placeholder='About' value={state.about} onChange={setState('about')} />
                     </div>
                   </div>
                 </Card.Body>

@@ -6,7 +6,9 @@ import { removeUser } from '../redux/actions/user';
 
 const Header = () => {
   const dispatch = useDispatch();
-  const handleClickLogout = () => {
+  const handleClickLogout = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     dispatch(removeUser());
   };
 
@@ -21,29 +23,13 @@ const Header = () => {
       <form className='d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0'></form>
 
       <ul className='navbar-nav ml-auto ml-md-0'>
-        <li className='nav-item dropdown no-arrow'>
+        <li className='nav-item'>
           <Link
-            to={'#'}
-            className='nav-link dropdown-toggle'
-            id='userDropdown'
-            role='button'
-            data-toggle='dropdown'
-            aria-haspopup='true'
-            aria-expanded='false'
+            onClick={handleClickLogout}
+            className='btn btn-primary'
           >
-            <i className='fas fa-user-circle fa-fw'></i>
+            Logout
           </Link>
-          <div className='dropdown-menu dropdown-menu-right' aria-labelledby='userDropdown'>
-            <Link
-              to={'#'}
-              onClick={handleClickLogout}
-              className='dropdown-item'
-              data-toggle='modal'
-              data-target='#logoutModal'
-            >
-              Logout
-            </Link>
-          </div>
         </li>
       </ul>
     </nav>

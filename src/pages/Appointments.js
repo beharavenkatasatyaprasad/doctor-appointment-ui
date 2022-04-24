@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import rxIcon from '../assets/rxicon.png';
 import { setItemHelper } from '../utils';
+import ReactQuill from 'react-quill';
+import ReactHtmlParser from 'react-html-parser';
 
 const Appointments = () => {
   const [appointments, setappointments] = useState([]);
@@ -147,7 +149,7 @@ const AppointmentCard = ({ app, user }) => {
           Patient Description:
         </p>
         <div style={{ fontSize: '14px', height: '125px', overflow: 'scroll' }} className='text-justify'>
-          {appointment.description}
+          {ReactHtmlParser(appointment.description)}
         </div>
         {appointment.prescription && (
           <div className='position-relative'>
@@ -162,7 +164,7 @@ const AppointmentCard = ({ app, user }) => {
               Doctor prescription:
             </p>
             <div style={{ fontSize: '14px', height: '125px', overflow: 'scroll' }} className='text-justify'>
-              {appointment.prescription}
+              {ReactHtmlParser(appointment.prescription)}
             </div>
           </div>
         )}
@@ -177,18 +179,7 @@ const AppointmentCard = ({ app, user }) => {
       <Modal centered show={isModalOpen} onHide={(e) => setisModalOpen(false)}>
         <Modal.Header closeButton>Add prescription for {patient.name}</Modal.Header>
         <Modal.Body>
-          <div className='form-label-group mt-3'>
-            <textarea
-              type='text'
-              className={'form-control '}
-              id='Prescription'
-              value={appointment.prescription}
-              placeholder='Prescription / report'
-              name='Prescription'
-              onChange={(e) => setAppointment('prescription')(e.target.value)}
-              required
-            />
-          </div>
+          <ReactQuill value={appointment.prescription} onChange={setAppointment('prescription')} />
         </Modal.Body>
         <Modal.Footer>
           <div className='text-right'>

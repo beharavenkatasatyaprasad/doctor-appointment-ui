@@ -11,6 +11,8 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import ReactHtmlParser from "react-html-parser";
 
 const DoctorSearch = () => {
   const [filters, setfilters] = useState({});
@@ -147,7 +149,7 @@ const Doctor = ({ doctor }) => {
   };
 
   return (
-    <Card style={{ minHeight: '180px' }} className='col-5 shadow'>
+    <Card style={{ minHeight: '180px' }} className='col-5 mb-2 shadow'>
       <div className='row no-gutters'>
         <div className='col-4 border-right'>
           <div className='text-center my-4'>
@@ -168,7 +170,7 @@ const Doctor = ({ doctor }) => {
         </div>
         <div className='col p-2 align-middle td'>
           <p style={{ fontSize: '14px', height: '125px', overflow: 'scroll' }} className='text-muted text-justify'>
-            {doctor.about}
+            {ReactHtmlParser(doctor.about)}
           </p>
           <div className='text-center'>
             <Button onClick={(e) => setisModalOpen(true)}>Book an appointment</Button>
@@ -209,16 +211,7 @@ const Doctor = ({ doctor }) => {
               </Form.Group>
               <Form.Group>
                 <div className='form-label-group mt-3'>
-                  <textarea
-                    type='text'
-                    className={'form-control '}
-                    id='Description'
-                    value={description}
-                    placeholder='Description / symtoms'
-                    name='Description'
-                    onChange={(e) => setdescription(e.target.value)}
-                    required
-                  />
+                  <ReactQuill value={description} onChange={(v) => setdescription(v)} />
                 </div>
               </Form.Group>
             </>
