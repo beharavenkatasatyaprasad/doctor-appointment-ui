@@ -12,7 +12,8 @@ import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
 import ReactQuill from 'react-quill';
-import ReactHtmlParser from "react-html-parser";
+import ReactHtmlParser from 'react-html-parser';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 const DoctorSearch = () => {
   const [filters, setfilters] = useState({});
@@ -107,6 +108,7 @@ const Doctor = ({ doctor }) => {
   const [slots, setslots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [description, setdescription] = useState(null);
+  const [loading, setloading] = useState(false);
 
   const history = useHistory();
 
@@ -132,6 +134,7 @@ const Doctor = ({ doctor }) => {
 
   const handleBookSlot = () => {
     // slotId, patientId, description
+    setloading(true);
     bookAppointment({
       patientId: user.id,
       description,
@@ -141,6 +144,7 @@ const Doctor = ({ doctor }) => {
         setdate(new Date());
         setSelectedSlot(null);
         setdescription(null);
+        setloading(false);
         history.push('/appointments');
       } else {
         return;
@@ -218,11 +222,13 @@ const Doctor = ({ doctor }) => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className='text-right'>
-            <Button onClick={handleBookSlot} disabled={!description || !selectedSlot || !date}>
-              Proceed
-            </Button>
-          </div>
+          <LoadingIndicator isLoading={loading}>
+            <div className='text-right'>
+              <Button onClick={handleBookSlot} disabled={!description || !selectedSlot || !date}>
+                Proceed
+              </Button>
+            </div>
+          </LoadingIndicator>
         </Modal.Footer>
       </Modal>
     </Card>

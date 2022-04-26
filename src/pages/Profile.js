@@ -15,7 +15,7 @@ import ReactQuill from 'react-quill';
 
 const Profile = () => {
   const { user } = useSelector((s) => s.userDetails);
-  const [state, setstate] = useState(user);
+  const [state, setstate] = useState({ ...user, about: user.about || '' });
   const [departments, setdepartments] = useState([]);
   const fileUploader = React.useRef();
 
@@ -27,11 +27,15 @@ const Profile = () => {
   }, []);
 
   const fetchDepartments = () => {
-    getDepartments().then((res) => {
-      if (res.success) {
-        setdepartments(res.departments);
-      }
-    });
+    getDepartments()
+      .then((res) => {
+        if (res.success && res.departments) {
+          setdepartments(res.departments);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleUpdateSave = () => {
@@ -74,7 +78,7 @@ const Profile = () => {
                 <Link to={'/profile'}>Profile</Link>
               </li>
             </ol>
-            <input type={'file'} onChange={handleFileUpload} className='d-none' ref={fileUploader}></input>
+            <input type={'file'} onChange={(e) => handleFileUpload(e)} className='d-none' ref={fileUploader}></input>
             <div className='container'>
               <Card className='col-6 mx-auto p-0'>
                 <Card.Header>
@@ -165,11 +169,12 @@ const Profile = () => {
                           <option selected disabled>
                             ---Select Department---
                           </option>
-                          {departments.map((u) => (
-                            <option key={u.name} value={u.id}>
-                              {u.label}
-                            </option>
-                          ))}
+                          {departments &&
+                            departments.map((u) => (
+                              <option key={u.name} value={u.id}>
+                                {u.label}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -221,7 +226,7 @@ const Profile = () => {
                   </div>
                   <div className='form-group'>
                     <div className='form-label-group'>
-                      <ReactQuill placeholder='About' value={state.about} onChange={setState('about')} />
+                      <ReactQuill placeholder='About' value={state.about} onChange={(value) => setState('about')(value)} />
                     </div>
                   </div>
                 </Card.Body>

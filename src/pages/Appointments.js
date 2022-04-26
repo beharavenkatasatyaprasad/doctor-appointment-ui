@@ -12,6 +12,7 @@ import rxIcon from '../assets/rxicon.png';
 import { setItemHelper } from '../utils';
 import ReactQuill from 'react-quill';
 import ReactHtmlParser from 'react-html-parser';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 const Appointments = () => {
   const [appointments, setappointments] = useState([]);
@@ -62,15 +63,18 @@ const AppointmentCard = ({ app, user }) => {
   const patient = appointment.patient;
   const slot = appointment.slot;
   const [isModalOpen, setisModalOpen] = useState(false);
+  const [loading, setloading] = useState(false);
 
   const setAppointment = setItemHelper(appointment, setappointment);
 
   const handleSavePrescription = () => {
+    setloading(true);
     savePrescription({
       prescription: appointment.prescription,
       appointmentId: app.id,
     }).then((res) => {
       if (res.success) {
+        setloading(false);
         setisModalOpen(false);
       } else {
         return;
@@ -182,11 +186,13 @@ const AppointmentCard = ({ app, user }) => {
           <ReactQuill value={appointment.prescription} onChange={setAppointment('prescription')} />
         </Modal.Body>
         <Modal.Footer>
-          <div className='text-right'>
-            <Button onClick={handleSavePrescription} disabled={!appointment.prescription}>
-              Proceed
-            </Button>
-          </div>
+          <LoadingIndicator isLoading={loading}>
+            <div className='text-right'>
+              <Button onClick={handleSavePrescription} disabled={!appointment.prescription}>
+                Proceed
+              </Button>
+            </div>
+          </LoadingIndicator>
         </Modal.Footer>
       </Modal>
     </Card>
